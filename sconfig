@@ -1,0 +1,25 @@
+#!/bin/bash
+
+secret_file="secret.json"
+
+case $1 in
+down)
+    config_file=$2
+    namespace=$3
+    secret_name=$4
+
+    kubectl get secret -n ${namespace} ${secret_name} -o json > ${secret_file}
+    kubectl get secret -n ${namespace} ${secret_name} -o json | jq -r .data.\"${config_file}\" | base64 -d > ${config_file}
+    ;;
+
+replace)
+    config_file=$2
+
+    code=$(cat ${config_file} | base64 -w 0)
+    cat ${secret_file} | jq .data.\"${config_file}\"=\"${code}\" | jq 'del(.metadata.annotations)' | jq 'del(.metadata.creationTimestamp)' | jq 'del(.metadata.resourceVersion)' | jq 'del(.metadata.selfLink)' | jq 'del(.metadata.uid)' > ${secret_file}
+    ;;
+
+apply)
+    kubectl -f ${secret_file}
+
+esac
