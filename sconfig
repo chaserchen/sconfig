@@ -20,6 +20,7 @@ replace)
     ;;
 
 apply)
-    kubectl -f ${secret_file}
+    kubectl apply -f ${secret_file}
+    ;;
 
 esac
