@@ -1,6 +1,7 @@
 ## k8s secret配置更新工具
 ### 下载k8s中的secret及对应的配置文件
 ```bash
+
 ./sconfig down ${config_file} ${namespace} ${secret_name}
 ```
 *当前config_file支持`secrets.py` 及 `config.hcl` 两种*
